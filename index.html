@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PawWar - Cuộc Đại Chiến Giữa Mèo và Chó</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes fallFromTop {
+            0% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+        }
+        .falling-text {
+            animation: fallFromTop 6s ease-in-out forwards;
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        .fade-out {
+            animation: fadeOut 1s ease-out forwards;
+        }
+        .glow {
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #a855f7, 0 0 40px #a855f7;
+        }
+        .glow-purple {
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+        }
+        .glow-red {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+        }
+        .carousel-container {
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+        }
+        .carousel-item {
+            scroll-snap-align: start;
+        }
+        .carousel-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .carousel-container::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        .carousel-container::-webkit-scrollbar-thumb {
+            background: #6b7280;
+            border-radius: 4px;
+        }
+        body {
+            background-image: url('trae test - img/background.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+        .overlay {
+            background-color: rgba(17, 24, 39, 0.85);
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Intro Section -->
+    <div id="intro" class="fixed inset-0 z-50 bg-black">
+        <video id="intro-video" class="absolute inset-0 w-full h-full object-cover" autoplay muted playsinline>
+            <source src="trae test - img/Trailer.mp4" type="video/mp4">
+        </video>
+        <div class="absolute inset-0 flex items-center justify-center">
+            <p id="story-text" class="falling-text text-2xl md:text-4xl text-center px-8 text-yellow-200 font-serif max-w-4xl">
+                Khi ranh giới giữa phép thuật huyền bí và sức mạnh cơ bắp bị xóa nhòa trên bàn cờ định mệnh. Hãy chỉ huy đội quân những chiến binh Chó trung thành hoặc các Pháp sư Mèo đầy quyền năng. Mỗi nước đi là một chiến lược!
+            </p>
+        </div>
+        <button id="skip-btn" class="absolute bottom-8 right-8 bg-gradient-to-r from-purple-600 to-red-600 px-8 py-3 rounded-full text-lg font-bold hover:scale-105 transition-transform">
+            Bỏ qua Trailer
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-40 bg-gray-900/95 backdrop-blur-md border-b border-gray-800 hidden">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-bold glow bg-gradient-to-r from-purple-400 to-red-400 bg-clip-text text-transparent">
+                <i class="fas fa-paw"></i> PawWar
+            </h1>
+            <nav class="flex gap-6">
+                <a href="#faction" class="hover:text-purple-400 transition-colors">Chọn Phe</a>
+                <a href="#arena" class="hover:text-purple-400 transition-colors">Đấu Trường</a>
+                <a href="#gameplay" class="hover:text-purple-400 transition-colors">Gameplay</a>
+                <a href="#events" class="hover:text-purple-400 transition-colors">Sự Kiện</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-20 overlay">
+        <!-- Hero Section -->
+        <section id="hero" class="py-20 text-center">
+            <h2 class="text-5xl md:text-7xl font-bold mb-6 glow">
+                CHÀO MỪNG ĐẾN VỚI PAWWAR
+            </h2>
+            <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
+                Trải nghiệm cuộc chiến huyền thoại giữa Phe Mèo và Phe Chó trên bàn cờ chiến thuật
+            </p>
+            <button class="bg-gradient-to-r from-purple-600 to-red-600 px-10 py-4 rounded-full text-xl font-bold hover:scale-105 transition-transform glow-purple">
+                Tải Ngay Miễn Phí
+            </button>
+        </section>
+
+        <!-- Faction Selection -->
+        <section id="faction" class="py-20">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center mb-16">CHỌN PHE CỦA BẠN</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Cat Faction -->
+                    <div id="cat-faction" class="relative">
+                        <div id="cat-selection" class="bg-gradient-to-br from-purple-900 to-blue-900 rounded-2xl p-8 text-center cursor-pointer hover:scale-105 transition-transform glow-purple">
+                            <img src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=magical%20cat%20wizard%20with%20purple%20magic%20aura%2C%20fantasy%20art&image_size=square_hd" alt="Phe Mèo" class="w-48 h-48 mx-auto mb-6 rounded-full object-cover">
+                            <h3 class="text-3xl font-bold mb-4 text-purple-300">PHE MÈO</h3>
+                            <p class="text-gray-300 mb-6">Chủ nghĩa phép thuật huyền bí, sức mạnh ma thuật không thể đo lường</p>
+                            <button class="bg-purple-600 px-8 py-3 rounded-full font-bold hover:bg-purple-500 transition-colors">
+                                Chọn Phe Mèo
+                            </button>
+                        </div>
+                        <video id="cat-transition" class="absolute inset-0 w-full h-full object-cover rounded-2xl hidden" muted playsinline>
+                            <source src="trae test - img/paw.mp4" type="video/mp4">
+                        </video>
+                        <div id="cat-characters" class="hidden mt-8">
+                            <h4 class="text-2xl font-bold mb-4 text-purple-300">Danh Sách Nhân Vật</h4>
+                            <div class="carousel-container flex gap-4 pb-4">
+                                <div class="carousel-item min-w-[200px] bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700 transition-colors" onclick="showCharacterModal('cat', 0)">
+                                    <img src="trae test - img/mage.jpg" alt="Mage" class="w-full h-48 object-cover rounded-lg mb-3">
+                                    <h5 class="font-bold">Pháp sư Siamese</h5>
+                                </div>
+                                <div class="carousel-item min-w-[200px] bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700 transition-colors" onclick="showCharacterModal('cat', 1)">
+                                    <img src="trae test - img/magicswordcat.jpg" alt="Magic Sword Cat" class="w-full h-48 object-cover rounded-lg mb-3">
+                                    <h5 class="font-bold">Pháp sư Kiếm Ma</h5>
+                                </div>
+                                <div class="carousel-item min-w-[200px] bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700 transition-colors" onclick="showCharacterModal('cat', 2)">
+                                    <img src="trae test - img/spiritsummoner.jpg" alt="Spirit Summoner" class="w-full h-48 object-cover rounded-lg mb-3">
+                                    <h5 class="font-bold">Pháp sư Hắc Ám</h5>
+                                </div>
+                                <div class="carousel-item min-w-[200px] bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700 transition-colors" onclick="showCharacterModal('cat', 3)">
+                                    <img src="trae test - img/alchemist.png" alt="Alchemist" class="w-full h-48 object-cover rounded-lg mb-3">
+                                    <h5 class="font-bold">Đại Pháp sư Lửa</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dog Faction -->
+                    <div id="dog-faction" class="relative">
+                        <div id="dog-selection" class="bg-gradient-to-br from-red-900 to-orange-900 rounded-2xl p-8 text-center cursor-pointer hover:scale-105 transition-transform glow-red">
+                            <img src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=warrior%20dog%20with%20armor%20and%20sword%2C%20fantasy%20art&image_size=square_hd" alt="Phe Chó" class="w-48 h-48 mx-auto mb-6 rounded-full object-cover">
+                            <h3 class="text-3xl font-bold mb-4 text-red-300">PHE CHÓ</h3>
+                            <p class="text-gray-300 mb-6">Sức mạnh cận chiến, lòng trung thành và sự dũng cảm không thể khuất phục</p>
+                            <button class="bg-red-600 px-8 py-3 rounded-full font-bold hover:bg-red-500 transition-colors">
+                                Chọn Phe Chó
+                            </button>
+                        </div>
+                        <video id="dog-transition" class="absolute inset-0 w-full h-full object-cover rounded-2xl hidden" muted playsinline>
+                            <source src="fang.mp4" type="video/mp4">
+                        </video>
+                        <div id="dog-characters" class="hidden mt-8">
+                            <h4 class="text-2xl font-bold mb-4 text-red-300">Danh Sách Nhân Vật</h4>
+                            <div class="carousel-container flex gap-4 pb-4">
+                                <div class="carousel-item min-w-[200px] bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700 transition-colors" onclick="showCharacterModal('dog', 0)">
+                                    <img src="trae test - img/knight.jpg" alt="Knight" class="w-full h-48 object-cover rounded-lg mb-3">
+                                    <h5 class="font-bold">Tướng Khiên</h5>
+                                </div>
+                                <div class="carousel-item min-w-[200px] bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700 transition-colors" onclick="showCharacterModal('dog', 1)">
+                                    <img src="trae test - img/royaldog.jpg" alt="Royal Dog" class="w-full h-48 object-cover rounded-lg mb-3">
+                                    <h5 class="font-bold">Tướng Lãnh đạo</h5>
+                                </div>
+                                <div class="carousel-item min-w-[200px] bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700 transition-colors" onclick="showCharacterModal('dog', 2)">
+                                    <img src="trae test - img/berserker.jpg" alt="Berserker" class="w-full h-48 object-cover rounded-lg mb-3">
+                                    <h5 class="font-bold">Tướng Hộ Giá</h5>
+                                </div>
+                                <div class="carousel-item min-w-[200px] bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700 transition-colors" onclick="showCharacterModal('dog', 3)">
+                                    <img src="trae test - img/assasindog.jpg" alt="Assassin" class="w-full h-48 object-cover rounded-lg mb-3">
+                                    <h5 class="font-bold">Tướng Đô Đốc</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Arena Section -->
+        <section id="arena" class="py-20 bg-gray-800/90">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center mb-16">ĐẤU TRƯỜNG</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="arena-card bg-gray-700 rounded-xl overflow-hidden cursor-pointer hover:scale-105 transition-transform" onclick="showArenaDetail(0)">
+                        <img src="trae test - img/iceberg.jpg" alt="Băng Đảo Vĩnh Cửu" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h4 class="text-xl font-bold mb-2">Băng Đảo Vĩnh Cửu</h4>
+                            <p class="text-gray-400 text-sm">Nằm tại đỉnh núi Everfrost, lưu giữ ma pháp sơ khai. Trơn trượt, ô tuyết (đông cứng 1 lượt). Phe Mèo: +15% Hiệu ứng Khống chế, -10% Mana. Phe Chó: -10% Tốc độ, Tanker: Kháng Đông cứng</p>
+                        </div>
+                    </div>
+                    <div class="arena-card bg-gray-700 rounded-xl overflow-hidden cursor-pointer hover:scale-105 transition-transform" onclick="showArenaDetail(1)">
+                        <img src="trae test - img/clogwork.jpg" alt="Thành Cơ Khí" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h4 class="text-xl font-bold mb-2">Thành Cơ Khí</h4>
+                            <p class="text-gray-400 text-sm">Thủ phủ công nghệ, guồng máy khổng lồ. Vòng xoay 90 độ mỗi 2 lượt, ô nạp năng lượng (hồi chiêu, 10% quá nhiệt). Phe Mèo: -5% Sát thương phép, +hiệu ứng. Phe Chó: +15% Sát thương vật lý</p>
+                        </div>
+                    </div>
+                    <div class="arena-card bg-gray-700 rounded-xl overflow-hidden cursor-pointer hover:scale-105 transition-transform" onclick="showArenaDetail(2)">
+                        <img src="trae test - img/minesharft.jpg" alt="Mỏ Được Quen" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h4 class="text-xl font-bold mb-2">Mỏ Được Quen</h4>
+                            <p class="text-gray-400 text-sm">Khu mỏ bỏ hoang, chiến trường tiêu hao. Xe mỏ càn quét mỗi 3 lượt, ô khoáng sản (tăng công, hồi máu). Phe Mèo: AOE -1 ô, Single-target +20%. Phe Chó: +10% Né tránh, hút máu</p>
+                        </div>
+                    </div>
+                    <div class="arena-card bg-gray-700 rounded-xl overflow-hidden cursor-pointer hover:scale-105 transition-transform" onclick="showArenaDetail(3)">
+                        <img src="trae test - img/beach.jpg" alt="Thung Lũng Tuyệt Chủng" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h4 class="text-xl font-bold mb-2">Thung Lũng Tuyệt Chủng</h4>
+                            <p class="text-gray-400 text-sm">Vùng đất hoang dã, núi lửa và xương khủng long. Dấu chân hóa thạch, dung nham sục sôi mỗi 4 lượt. Phe Mèo: 20% X2 kỹ năng. Phe Chó: đứng cạnh +10% Sát thương</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gameplay Section -->
+        <section id="gameplay" class="py-20">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center mb-16">CƠ CHẾ GAMEPLAY</h2>
+                <div class="max-w-4xl mx-auto">
+                    <p class="text-xl text-center text-gray-300 mb-12">
+                        Khi ranh giới giữa phép thuật huyền bí và sức mạnh cơ bắp bị xóa nhòa trên bàn cờ định mệnh. Hãy chỉ huy đội quân những chiến binh Chó trung thành hoặc các Pháp sư Mèo đầy quyền năng. Mỗi nước đi là một chiến lược với mỗi nhân vật có 1 cách di chuyển khác nhau, kết hợp giữa các kỹ năng tạo thành bước ngoặt để lật ngược tình thế!
+                    </p>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <img src="trae test - img/gameplay1.jpg" alt="Gameplay 1" class="w-full h-48 object-cover rounded-lg mb-4">
+                            <h4 class="text-xl font-bold mb-2">Chiến Thuật Bàn Cờ</h4>
+                            <p class="text-gray-400">Di chuyển quân cờ như cờ vua, kết hợp kỹ năng đặc biệt</p>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <img src="trae test - img/gameplay2.jpg" alt="Gameplay 2" class="w-full h-48 object-cover rounded-lg mb-4">
+                            <h4 class="text-xl font-bold mb-2">Kết Hợp Kỹ Năng</h4>
+                            <p class="text-gray-400">Kết hợp các kỹ năng để tạo ra combo hủy diệt</p>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <img src="trae test - img/gameplay3.jpg" alt="Gameplay 3" class="w-full h-48 object-cover rounded-lg mb-4">
+                            <h4 class="text-xl font-bold mb-2">Nâng Cấp Nhân Vật</h4>
+                            <p class="text-gray-400">Thu thập và nâng cấp đội quân của riêng bạn</p>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <img src="trae test - img/gameplay4.jpg" alt="Gameplay 4" class="w-full h-48 object-cover rounded-lg mb-4">
+                            <h4 class="text-xl font-bold mb-2">Đấu Trường Trực Tuyến</h4>
+                            <p class="text-gray-400">Thách đấu với người chơi trên toàn thế giới</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Events Section -->
+        <section id="events" class="py-20 bg-gray-800/90">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center mb-16">SỰ KIỆN NỔI BẬT</h2>
+                <div class="max-w-3xl mx-auto space-y-6">
+                    <div class="bg-gradient-to-r from-purple-900/50 to-blue-900/50 rounded-xl p-6 border border-purple-500/30">
+                        <div class="flex items-center gap-4 mb-3">
+                            <i class="fas fa-trophy text-3xl text-yellow-400"></i>
+                            <div>
+                                <h4 class="text-xl font-bold">1.000.000 Lượt Đăng Ký</h4>
+                                <p class="text-gray-400">Nhận ngay Pháp sư Mèo Corgi-Mage độc quyền!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-red-900/50 to-orange-900/50 rounded-xl p-6 border border-red-500/30">
+                        <div class="flex items-center gap-4 mb-3">
+                            <i class="fas fa-gamepad text-3xl text-green-400"></i>
+                            <div>
+                                <h4 class="text-xl font-bold">Giải Đấu Streamer</h4>
+                                <p class="text-gray-400">Quy tụ các streamer hàng đầu thế giới</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-purple-900/50 to-red-900/50 rounded-xl p-6 border border-gray-500/30">
+                        <div class="flex items-center gap-4 mb-3">
+                            <i class="fas fa-rocket text-3xl text-blue-400"></i>
+                            <div>
+                                <h4 class="text-xl font-bold">Ra Mắt Chính Thức</h4>
+                                <p class="text-gray-400">Quý 4/2026 - Phiên bản Toàn Cầu trên iOS & Android</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-950 py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                    <h3 class="text-2xl font-bold glow mb-2">
+                        <i class="fas fa-paw"></i> PawWar
+                    </h3>
+                    <p class="text-gray-400">support@PawWar.game</p>
+                </div>
+                <div class="flex gap-6">
+                    <a href="#" class="text-2xl hover:text-purple-400 transition-colors"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-2xl hover:text-purple-400 transition-colors"><i class="fab fa-discord"></i></a>
+                    <a href="#" class="text-2xl hover:text-purple-400 transition-colors"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="text-2xl hover:text-purple-400 transition-colors"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="text-center mt-8 text-gray-500">
+                <p>&copy; 2026 PawWar. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Character Modal -->
+    <div id="character-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80">
+        <div class="bg-gray-800 rounded-2xl p-8 max-w-lg w-full mx-4 relative">
+            <button onclick="closeCharacterModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <script>
+        const catCharacters = [
+            {
+                name: "Pháp sư Siamese",
+                species: "Mèo Pháp thuật hệ Phong",
+                movement: "Di chuyển linh hoạt",
+                attack: "Đánh thường: Dùng dải lụa",
+                special: "Hoán Đổi Càn Khôn (Hồi chiêu: 3 lượt): Tầm 4 ô, hoán đổi vị trí với đồng minh hoặc kẻ địch",
+                image: "trae test - img/mage.jpg"
+            },
+            {
+                name: "Pháp sư Kiếm Ma",
+                species: "Mèo Kiếm thuật",
+                movement: "Đi chéo 2 ô",
+                attack: "Lục Bảo Trảm: Tầm 2 ô (đánh chéo được), 100% sát thương vật lý",
+                special: "Vũ Điệu Ma Kiếm (Hồi chiêu: 2 lượt): Bản thân, hình chữ Thập xung quanh 1 ô, 150% sát thương phép",
+                image: "trae test - img/magicswordcat.jpg"
+            },
+            {
+                name: "Pháp sư Hắc Ám",
+                species: "Mèo Tà thuật",
+                movement: "Di chuyển linh hoạt",
+                attack: "Ám Hỏa Cầu: Tầm 3 ô, 90% sát thương phép, để lại hiệu ứng",
+                special: "Lời Nguyền Hắc Ám (Hồi chiêu: 3 lượt): Tầm 3 ô, diện rộng 2x2, 120% sát thương phép",
+                image: "trae test - img/spiritsummoner.jpg"
+            },
+            {
+                name: "Đại Pháp sư Lửa",
+                species: "Mèo Hỏa thuật",
+                movement: "Di chuyển linh hoạt",
+                attack: "Hỏa Linh Đạn: Tầm 4 ô, 110% sát thương phép",
+                special: "Thiên Tai Giáng Thế (Hồi chiêu: 4 lượt): Tầm 5 ô, quả cầu lửa, 250% sát thương phép trung tâm, 120% lan tỏa, thổi bay",
+                image: "trae test - img/alchemist.png"
+            }
+        ];
+
+        const dogCharacters = [
+            {
+                name: "Tướng Khiên",
+                species: "Chó Tanker",
+                movement: "Di chuyển chậm",
+                attack: "Đánh thường với đại đao",
+                special: "Khiên Chắn Kiên Cố (Hồi chiêu: 3 lượt): Bản thân, khiêu khích tất cả kẻ địch trong 2 ô, giáp ảo chặn bằng 25% máu tối đa",
+                image: "trae test - img/knight.jpg"
+            },
+            {
+                name: "Tướng Lãnh đạo",
+                species: "Chó Lãnh đạo",
+                movement: "Di chuyển linh hoạt",
+                attack: "Đánh thường với bờm uy nghi",
+                special: "Mệnh Lệnh Tiến Công (Hồi chiêu: 3 lượt): Tầm 3 ô, cho đồng minh hành động thêm 1 lượt",
+                image: "trae test - img/royaldog.jpg"
+            },
+            {
+                name: "Tướng Hộ Giá",
+                species: "Chó Hộ giá",
+                movement: "Di chuyển nhanh nhẹn",
+                attack: "Đánh thường",
+                special: "Ngự Lâm Hộ Giá (Hồi chiêu: 2 lượt): Tầm 2 ô, lao đến bên đồng minh, gánh chịu 70% sát thương thay thế trong 2 lượt",
+                image: "trae test - img/berserker.jpg"
+            },
+            {
+                name: "Tướng Đô Đốc",
+                species: "Chó Đô đốc",
+                attack: "Đánh thường với cây búa tạ",
+                movement: "Di chuyển mạnh mẽ",
+                special: "Giáng Đòn Sấm Sét (Hồi chiêu: 3 lượt): Tầm 2 ô (nhảy đến), 180% sát thương vật lý, làm choáng 1 lượt, +30% sát thương với Pháp sư",
+                image: "trae test - img/assasindog.jpg"
+            }
+        ];
+
+        const intro = document.getElementById('intro');
+        const introVideo = document.getElementById('intro-video');
+        const skipBtn = document.getElementById('skip-btn');
+        const header = document.getElementById('header');
+
+        function endIntro() {
+            intro.classList.add('fade-out');
+            setTimeout(() => {
+                intro.style.display = 'none';
+                header.classList.remove('hidden');
+                document.getElementById('hero').scrollIntoView({ behavior: 'smooth' });
+            }, 1000);
+        }
+
+        introVideo.onended = endIntro;
+        skipBtn.onclick = endIntro;
+
+        document.getElementById('cat-selection').onclick = function() {
+            const transition = document.getElementById('cat-transition');
+            transition.classList.remove('hidden');
+            transition.play();
+            transition.onended = function() {
+                transition.classList.add('hidden');
+                document.getElementById('cat-selection').classList.add('hidden');
+                document.getElementById('cat-characters').classList.remove('hidden');
+            };
+            transition.onerror = function() {
+                transition.classList.add('hidden');
+                document.getElementById('cat-selection').classList.add('hidden');
+                document.getElementById('cat-characters').classList.remove('hidden');
+            };
+        };
+
+        document.getElementById('dog-selection').onclick = function() {
+            const transition = document.getElementById('dog-transition');
+            transition.classList.remove('hidden');
+            transition.play();
+            transition.onended = function() {
+                transition.classList.add('hidden');
+                document.getElementById('dog-selection').classList.add('hidden');
+                document.getElementById('dog-characters').classList.remove('hidden');
+            };
+            transition.onerror = function() {
+                transition.classList.add('hidden');
+                document.getElementById('dog-selection').classList.add('hidden');
+                document.getElementById('dog-characters').classList.remove('hidden');
+            };
+        };
+
+        function showCharacterModal(faction, index) {
+            const characters = faction === 'cat' ? catCharacters : dogCharacters;
+            const char = characters[index];
+            const modal = document.getElementById('character-modal');
+            const content = document.getElementById('modal-content');
+            
+            content.innerHTML = `
+                <img src="${char.image}" alt="${char.name}" class="w-full h-64 object-cover rounded-xl mb-6">
+                <h3 class="text-2xl font-bold mb-4">${char.name}</h3>
+                <div class="space-y-3">
+                    <p><strong>Chủng loài:</strong> ${char.species}</p>
+                    <p><strong>Cách di chuyển:</strong> ${char.movement}</p>
+                    <p><strong>Đòn đánh thường:</strong> ${char.attack}</p>
+                    <p><strong>Đòn đặc biệt:</strong> ${char.special}</p>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeCharacterModal() {
+            const modal = document.getElementById('character-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function showArenaDetail(index) {
+            alert('Đã chọn khu vực đấu trường!');
+        }
+
+        document.getElementById('character-modal').onclick = function(e) {
+            if (e.target === this) {
+                closeCharacterModal();
+            }
+        };
+    </script>
+</body>
+</html>
